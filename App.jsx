@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { RefreshCw, Settings } from 'lucide-react';
 
-// Data & Config
+//Data & Config
 import { FONTS_DB, ASSESSMENT_QUESTIONS } from './data/constants';
 
-// Components
+//Components
 import { SplashScreen, SettingsModal } from './components/UIComponents';
 import ExerciseModal from './components/ExerciseModal';
 
@@ -19,7 +19,7 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [appMode, setAppMode] = useState('login');
   
-  // Assessment State
+  //Assessment State
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [demographics, setDemographics] = useState({ Age: '', Gender: '', NativeLang_Code: '1' });
   const [quizScore, setQuizScore] = useState({}); 
@@ -30,18 +30,18 @@ const App = () => {
   const [memoryInput, setMemoryInput] = useState("");
   const [showMemorySequence, setShowMemorySequence] = useState(true);
   
-  // Data State
+  //Data State
   const [dbAssignments, setDbAssignments] = useState([]);
   const [teacherResults, setTeacherResults] = useState([]);
   const [newAssign, setNewAssign] = useState({ title: '', text: '' });
   
-  // Modal State
+  //Modal State
   const [activeExercise, setActiveExercise] = useState(null); 
   const [completedLevels, setCompletedLevels] = useState({}); 
   const [showSettings, setShowSettings] = useState(false);
   const [settings, setSettings] = useState({ theme: 'default', font: 'sans', textSize: 1, spacing: 1 });
 
-  // --- STYLES HELPER ---
+  //STYLES HELPER
   const getAppStyles = () => {
     const selectedFont = FONTS_DB.find(f => f.id === settings.font)?.css || 'Inter, system-ui, sans-serif';
     let base = { fontSize: `${16 * settings.textSize}px`, lineHeight: settings.spacing * 1.5, fontFamily: selectedFont };
@@ -53,11 +53,11 @@ const App = () => {
   };
   const appStyles = getAppStyles();
 
-  // --- EFFECTS ---
+  //EFFECTS
   useEffect(() => { const t = setTimeout(() => setShowSplash(false), 3000); return () => clearTimeout(t); }, []);
   useEffect(() => { if (appMode === 'assessment') startQuestionTimer(); }, [currentQuestionIndex, appMode]);
 
-  // --- API HELPER ---
+  //API HELPER
   // Inside App.jsx
 const apiCall = async (endpoint, method = 'GET', body = null) => {
     try {
@@ -68,7 +68,7 @@ const apiCall = async (endpoint, method = 'GET', body = null) => {
     } catch (e) { console.error("API Error", e); return null; }
   };
 
-  // --- AUTH HANDLERS ---
+  //AUTH HANDLERS
   const handleRegister = async (formData) => {
       const res = await apiCall('/register', 'POST', formData);
       if(res.error) {
@@ -111,7 +111,7 @@ const apiCall = async (endpoint, method = 'GET', body = null) => {
       // Optional: Clear other states if needed
   };
 
-  // --- DATA FETCHING ---
+  //DATA FETCHING
   const fetchAssignments = async () => { const data = await apiCall('/assignments'); if(data) setDbAssignments(data); };
   const fetchTeacherData = async () => { const aData = await apiCall('/assignments'); if(aData) setDbAssignments(aData); const rData = await apiCall('/teacher/results'); if(rData) setTeacherResults(rData); };
   
@@ -123,7 +123,7 @@ const apiCall = async (endpoint, method = 'GET', body = null) => {
     fetchTeacherData();
   };
 
-  // --- ASSESSMENT LOGIC ---
+  //ASSESSMENT LOGIC
   const startAssessment = () => {
     if (!demographics.Age || !demographics.Gender) { alert("Please complete demographics first."); return; }
     setAppMode('assessment'); setCurrentQuestionIndex(0); setQuizScore({}); setReactionTimes({}); startQuestionTimer();
